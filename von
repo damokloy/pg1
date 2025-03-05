@@ -1,0 +1,103 @@
+CREATE DATABASE Act3_VISITACION;
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(15)
+);
+
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY ,
+    Name VARCHAR(100),
+    Country VARCHAR(50)
+);
+
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY ,
+    Title VARCHAR(255),
+    Price DECIMAL(10,2),
+    AuthorID INT,
+    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
+);
+
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY ,
+    CustomerID INT,
+    OrderDate DATE,
+    TotalAmount DECIMAL(10,2),
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE Payments (
+    PaymentID INT PRIMARY KEY ,
+    OrderID INT,
+    PaymentDate DATE,
+    AmountPaid DECIMAL(10,2),
+    PaymentMethod VARCHAR(50),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+);
+
+INSERT INTO Customers (CustomerID, Name, Email, Phone) VALUES
+('2023305011','Silver Heyrana', 'heyranasilver@gmail.com', '09023305011'),
+('2023306356','Ian Kirby', 'kirbydumz@gmail.com', '09023306356'),
+('2023304142','Lollaine Puerte', 'guilllainey@gmail.com', '09023304142'),
+('2023305059','Jhon Peter Codilla', 'johnpeter@gmail.com', '09123456789'),
+('2023304637','Redjan Phil S. Visitacion', 'visitacionredjanphils@gmail.com', '09534181760');
+
+INSERT INTO Authors (AuthorID, Name, Country) VALUES
+('1','J.K. Rowling', 'PH'),
+('2','George R.R. Martin', 'PH'),
+('3','J.R.R. Tolkien', 'PH'),
+('4','Stephen King', 'PH'),
+('5','Agatha Christie', 'PH');
+('6','Jj Moon', 'India'),
+('7','Jorgena', 'USA'),
+('8','Pangoy', 'China'),
+('9','Concha', 'Cambodia'),
+('10','Rizal', 'China');
+
+INSERT INTO Books (BookID, Title, Price, AuthorID) VALUES
+('1','Harry Potter', 29.99, 1),
+('2','Game of Thrones', 34.99, 2),
+('3','The Hobbit', 19.99, 3),
+('4','The Shining', 24.99, 4),
+('5','Murder on the Orient Express', 14.99, 5);
+
+INSERT INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount) VALUES
+(1, '2023305011', '2025-02-20', 29.99),
+(2, '2023306356', '2025-02-21', 34.99),
+(3, '2023304142', '2025-02-22', 19.99),
+(4, '2023305059', '2025-02-23', 24.99),
+(5, '2023304637', '2025-02-24', 14.99);
+
+INSERT INTO Payments (PaymentID, OrderID, PaymentDate, AmountPaid, PaymentMethod) VALUES
+(1,'1', '2025-02-20', 29.99, 'Credit Card'),
+(2,'2', '2025-02-21', 34.99, 'PayPal'),
+(3,'3', '2025-02-22', 19.99, 'Debit Card'),
+(4,'4', '2025-02-23', 24.99, 'Credit Card'),
+(5,'5', '2025-02-24', 14.99, 'Bank Transfer');
+
+
+
+--LEFT JOIN--
+SELECT Orders.orderID, Payments.Amountpaid
+FROM Orders
+LEFT JOIN payments on Orders.OrderID = Payments.OrderID;
+
+--RIGHT JOIN--
+SELECT Authors.AuthorID, Books.Title
+FROM Authors
+RIGHT JOIN Books on Authors.AuthorID = Books.AuthorID;
+
+--CROSS JOIN--
+SELECT Orders.OrderID, Customers.Name
+FROM Orders
+CROSS JOIN Customers;
+
+--SELF JOIN--
+SELECT A.Name AS AuthorName1, B.Name AS AuthorName2, A.Country
+FROM Authors A, Authors B
+WHERE A.AuthorID <> B.AuthorID
+AND A.Country = B.Country
+ORDER BY A.Country;
